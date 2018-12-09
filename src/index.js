@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from 'react-dom';
 import StorePicker from './components/StorePicker';
 import './css/index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 
