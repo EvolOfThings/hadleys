@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import StorePicker from './components/StorePicker';
-import './css/index.css';
+import './css/style.css';
 import * as serviceWorker from './serviceWorker';
 
 
