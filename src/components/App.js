@@ -8,7 +8,7 @@ render() {
     return (
         <div className="catch-of-the-day">
         <div className="menu">
-        <Header/>
+        <Header tagline="As Organic as Mother Nature" />
         </div>
         <Inventory/>
         <Order />
