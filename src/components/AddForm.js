@@ -6,6 +6,7 @@ class AddForm extends React.Component {
     statusRef = React.createRef();
     descRef = React.createRef();
     imageRef = React.createRef();
+    
     createFish = (event) => {
         //1. prevent form from submitting by default
         event.preventDefault();
@@ -18,6 +19,10 @@ class AddForm extends React.Component {
         };
         console.log(fish);
         this.props.addFish(fish);
+
+        //refresh the form
+        //console.log(event.currentTarget);
+        event.currentTarget.reset();
     };
 render() {
     return (
