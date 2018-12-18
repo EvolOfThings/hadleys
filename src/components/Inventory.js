@@ -7,6 +7,7 @@ render() {
         <div className="inventory">Inventory
             <h2>Inventory</h2>
             <AddForm addFish={this.props.addFish} />
+            <button onClick={this.props.loadSampleFishes}>Load Sample Fishes</button>  
         </div>
     );
 }
