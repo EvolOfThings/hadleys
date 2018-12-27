@@ -5,6 +5,7 @@ import AddForm from './AddForm';
 import EditFishForm from './EditFishForm';
 import Login from './Login';
 import base, { firebaseApp } from '../base';
+import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from 'constants';
 
 
 class Inventory extends React.Component {
@@ -15,13 +16,36 @@ class Inventory extends React.Component {
         loadSampleFishes: PropTypes.func
     };
 
+    state = {
+        uid: null,
+        owner: null
+    };
+
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged(user => {
+            if(user) {
+                this.authHandler({ user });
+            }
+        });
+    }
+
     authHandler = async authData => {
         //console.log(authData);
         //1. look up the current store in the firebase db
         const store = await base.fetch(this.props.storeId, { context: this });
         console.log(store);
-        //2. clain it if there is no owner
+        //2. claim it if there is no owner
+        if (!store.owner) {
+            //save it as our own
+            await base.post(`${this.props.storeId}/owner`, {
+                data: authData.user.uid
+            });
+        }
         //3. set the state of the inventory component to reflect the current user
+        this.setState({
+            uid: authData.user.uid,
+            owner: store.owner || authData.user.uid
+        })
     };
 
     //authoProvider for whivh they want to sign in with
@@ -33,11 +57,35 @@ class Inventory extends React.Component {
             .then(this.authHandler);
         };
 
+        logout =  async () => {
+            console.log('Logging out!');
+            await firebase.auth().signOut();
+            this.setState({ uid: null });
+        }
+
 render() {
-    return <Login authenticate={this.authenticate}/>;
+    const logout = <button onClick={this.logout}>Log Out!</button>
+
+    // 1. check if they are logged in
+    if (!this.state.uid) {
+        return <Login authenticate={this.authenticate}/>;
+    }
+
+    //2. check if they are no the owner of the store
+    if (this.state.uid !== this.state.owner) {
+        return (
+        <div>
+            <p>Sorry you are not the owner!</p>
+            {logout}
+        </div>
+        );
+    }
+
+    //3. they must be the owner, just render the inventory
     return (
         <div className="inventory">
             <h2>Inventory</h2>
+            {logout}
             {Object.keys(this.props.fishes).map(key => (
                 <EditFishForm 
                     key={key}
