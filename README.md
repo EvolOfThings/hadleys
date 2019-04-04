@@ -10,4 +10,4 @@
 - Component Validation with PropTypes
 - Authentication using Github, Twitter, Facebook (For demo purpose, it is disabled)
 
-This was built with help of @wesbos React course materials.
+This was built with help of @wesbos React course materials. 
